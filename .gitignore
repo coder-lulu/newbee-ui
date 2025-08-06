@@ -53,3 +53,4 @@ vite.config.ts.*
 apps/web-antd/types/components.d.ts
 .history
 
+node_modules

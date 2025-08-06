@@ -32,7 +32,7 @@ export default defineConfig(async () => {
           '/fms-api': {
             changeOrigin: true,
             rewrite: (path) => path.replace(/^\/fms-api/, ''),
-            target: 'http://192.168.26.130:9102',
+            target: 'http://127.0.0.1:9102',
             ws: true,
           },
           '/ipam-api': {
@@ -44,7 +44,7 @@ export default defineConfig(async () => {
           '/mms-api': {
             changeOrigin: true,
             rewrite: (path) => path.replace(/^\/mms-api/, ''),
-            target: 'http://192.168.26.130:9104',
+            target: 'http://127.0.0.1:9104',
             ws: true,
           },
           '/ops-api': {
@@ -56,7 +56,7 @@ export default defineConfig(async () => {
           '/sys-api': {
             changeOrigin: true,
             rewrite: (path) => path.replace(/^\/sys-api/, ''),
-            target: 'http://192.168.26.130:9100',
+            target: 'http://127.0.0.1:9100',
             ws: true,
           },
         },
