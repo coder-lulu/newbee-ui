@@ -1,0 +1,19 @@
+{
+  "menu": {
+    "root": "数据IO",
+    "discoveryPool": "发现池",
+    "discoveryPoolDetail": "发现池详情",
+    "discoveryPoolEdit": "编辑发现池",
+    "fieldMapping": "字段映射",
+    "fieldMappingDetail": "映射详情",
+    "fieldMappingEdit": "编辑映射",
+    "inputTask": "输入任务",
+    "outputTask": "输出任务",
+    "taskDetail": "任务详情",
+    "taskEdit": "编辑任务",
+    "taskLog": "任务日志",
+    "mappingLog": "映射日志",
+    "monitor": "监控与指标"
+  }
+}
+

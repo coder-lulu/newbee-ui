@@ -1,0 +1,19 @@
+{
+  "menu": {
+    "root": "Data IO",
+    "discoveryPool": "Discovery Pools",
+    "discoveryPoolDetail": "Discovery Pool Detail",
+    "discoveryPoolEdit": "Edit Discovery Pool",
+    "fieldMapping": "Field Mappings",
+    "fieldMappingDetail": "Mapping Detail",
+    "fieldMappingEdit": "Edit Mapping",
+    "inputTask": "Input Tasks",
+    "outputTask": "Output Tasks",
+    "taskDetail": "Task Detail",
+    "taskEdit": "Edit Task",
+    "taskLog": "Task Logs",
+    "mappingLog": "Mapping Logs",
+    "monitor": "Monitoring & Metrics"
+  }
+}
+

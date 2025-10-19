@@ -1,0 +1,28 @@
+{
+  "auth": {
+    "login": "登录",
+    "register": "注册",
+    "codeLogin": "验证码登录",
+    "qrcodeLogin": "二维码登录",
+    "forgetPassword": "忘记密码",
+    "oauthLogin": "第三方登录"
+  },
+  "dashboard": {
+    "title": "概览",
+    "analytics": "分析页",
+    "workspace": "工作台"
+  },
+  "terminal": {
+    "title": "终端",
+    "demo": "终端演示"
+  },
+  "system": {
+    "moduleName": "系统管理",
+    "oauth": {
+      "provider": "OAuth提供商",
+      "account": "OAuth账户",
+      "statistics": "OAuth统计",
+      "callback": "OAuth回调"
+    }
+  }
+}

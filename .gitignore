@@ -1,0 +1,73 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build outputs
+dist
+dist-ssr
+dist.zip
+dist.tar
+dist.war
+*-dist.zip
+*-dist.tar
+*-dist.war
+dev-dist
+.nitro
+.output
+
+# Cache
+.cache
+.turbo
+.temp
+.stylelintcache
+.eslintcache
+**/.vitepress/cache
+coverage
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment files
+.env.local
+.env.*.local
+*.local
+
+# Lock files (keep pnpm-lock.yaml for reproducible builds)
+yarn.lock
+package-lock.json
+
+# Vite config temp files
+vite.config.mts.*
+vite.config.mjs.*
+vite.config.js.*
+vite.config.ts.*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.history
+.VSCodeCounter
+
+# Auto-generated files
+apps/web-antd/types/components.d.ts
+
+# Backend mock data
+**/backend-mock/data
+
+# Documentation (not committed to keep repo clean)
+docs/
+
+# OS files
+.DS_Store
+Thumbs.db
