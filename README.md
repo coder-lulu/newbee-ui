@@ -267,6 +267,59 @@ server: {
 }
 ```
 
+## 界面预览
+
+以下是 NewBee Admin UI 的实际运行效果：
+
+### 系统管理
+<div align="center">
+  <img src="./images/Snipaste_2025-10-19_18-20-33.png" alt="用户管理" width="800"/>
+  <p>用户管理 - 支持用户增删改查、角色分配、密码重置</p>
+</div>
+
+<div align="center">
+  <img src="./images/Snipaste_2025-10-19_18-20-56.png" alt="角色管理" width="800"/>
+  <p>角色管理 - 角色权限配置、数据权限设置</p>
+</div>
+
+<div align="center">
+  <img src="./images/Snipaste_2025-10-19_18-21-20.png" alt="部门管理" width="800"/>
+  <p>部门管理 - 组织架构树形管理</p>
+</div>
+
+### 权限控制
+<div align="center">
+  <img src="./images/Snipaste_2025-10-19_18-21-32.png" alt="菜单管理" width="800"/>
+  <p>菜单管理 - 动态菜单配置、权限标识</p>
+</div>
+
+<div align="center">
+  <img src="./images/Snipaste_2025-10-19_18-21-44.png" alt="API权限" width="800"/>
+  <p>API权限 - 接口级权限控制</p>
+</div>
+
+### 租户管理
+<div align="center">
+  <img src="./images/Snipaste_2025-10-19_18-22-07.png" alt="租户列表" width="800"/>
+  <p>租户管理 - 多租户SaaS架构支持</p>
+</div>
+
+### 监控中心
+<div align="center">
+  <img src="./images/Snipaste_2025-10-19_18-22-13.png" alt="在线用户" width="800"/>
+  <p>在线用户 - 实时监控和强制下线</p>
+</div>
+
+<div align="center">
+  <img src="./images/Snipaste_2025-10-19_18-22-18.png" alt="操作日志" width="800"/>
+  <p>操作日志 - 完整的审计追踪</p>
+</div>
+
+<div align="center">
+  <img src="./images/Snipaste_2025-10-19_18-22-24.png" alt="登录日志" width="800"/>
+  <p>登录日志 - 登录行为监控</p>
+</div>
+
 ## 浏览器支持
 
 现代浏览器和 IE11+
