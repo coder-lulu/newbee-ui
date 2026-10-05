@@ -1,13 +1,14 @@
-import type { LayoutType } from '@vben/types';
+import type { LayoutType } from "@vben/types";
 
 import {
   defineOverridesPreferences,
   updatePreferences,
-} from '@vben/preferences';
+} from "@vben/preferences";
 
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
-import { getPublicSystemConfigurationList } from '#/api/system/config';
+import { getPublicSystemConfigurationList } from "#/api/system/config";
+import { resolveLogoSource } from "#/brand";
 
 interface DynamicConfig {
   systemName: string;
@@ -18,13 +19,13 @@ interface DynamicConfig {
   showBreadCrumb: boolean;
 }
 
-export const useDynamicConfigStore = defineStore('dynamic-config', {
+export const useDynamicConfigStore = defineStore("dynamic-config", {
   state: (): DynamicConfig => ({
-    systemName: '',
-    systemLogo: '',
+    systemName: "",
+    systemLogo: "",
     showSettingButton: true,
     showNotice: false,
-    layoutType: 'sidebar-nav',
+    layoutType: "sidebar-nav",
     showBreadCrumb: true,
   }),
   getters: {
@@ -43,63 +44,63 @@ export const useDynamicConfigStore = defineStore('dynamic-config', {
         for (const v of config.data) {
           if (v.key !== undefined) {
             switch (v.key) {
-              case 'sys.ui.header.showNotice': {
+              case "sys.ui.header.showNotice": {
                 if (v.state === false) {
                   this.showNotice = false;
                   break;
                 }
-                this.showNotice = v.value !== undefined && v.value === 'true';
+                this.showNotice = v.value !== undefined && v.value === "true";
                 break;
               }
-              case 'sys.ui.layoutType': {
+              case "sys.ui.layoutType": {
                 if (v.state === false) {
-                  this.layoutType = 'sidebar-nav';
+                  this.layoutType = "sidebar-nav";
                   break;
                 }
                 this.layoutType =
                   v.value !== undefined &&
-                  (v.value === 'sidebar-nav' ||
-                    v.value === 'sidebar-mixed-nav' ||
-                    v.value === 'header-nav' ||
-                    v.value === 'mixed-nav' ||
-                    v.value === 'full-content')
+                  (v.value === "sidebar-nav" ||
+                    v.value === "sidebar-mixed-nav" ||
+                    v.value === "header-nav" ||
+                    v.value === "mixed-nav" ||
+                    v.value === "full-content")
                     ? (v.value as any)
-                    : 'sidebar-nav';
+                    : "sidebar-nav";
                 break;
               }
-              case 'sys.ui.logo': {
+              case "sys.ui.logo": {
                 if (v.state === false) {
-                  this.systemLogo = '';
+                  this.systemLogo = "";
                   break;
                 }
-                this.systemLogo = v.value === undefined ? '' : v.value;
+                this.systemLogo = v.value === undefined ? "" : v.value;
                 break;
               }
-              case 'sys.ui.name': {
+              case "sys.ui.name": {
                 if (v.state === false) {
-                  this.systemName = '';
+                  this.systemName = "";
                   break;
                 }
-                this.systemName = v.value === undefined ? '' : v.value;
+                this.systemName = v.value === undefined ? "" : v.value;
                 break;
               }
-              case 'sys.ui.showBreadCrumb': {
+              case "sys.ui.showBreadCrumb": {
                 if (v.state === false) {
                   this.showBreadCrumb = true;
                   break;
                 }
                 this.showBreadCrumb = !(
-                  v.value !== undefined && v.value === 'false'
+                  v.value !== undefined && v.value === "false"
                 );
                 break;
               }
-              case 'sys.ui.showSettingButton': {
+              case "sys.ui.showSettingButton": {
                 if (v.state === false) {
                   this.showSettingButton = true;
                   break;
                 }
                 this.showSettingButton =
-                  v.value !== undefined && v.value === 'true';
+                  v.value !== undefined && v.value === "true";
                 break;
               }
             }
@@ -108,14 +109,11 @@ export const useDynamicConfigStore = defineStore('dynamic-config', {
         const overridesPreferences = defineOverridesPreferences({
           app: {
             enablePreferences: this.showSettingButton,
-            name: this.systemName === '' ? 'NewBeeOps' : this.systemName,
+            name: this.systemName || import.meta.env.VITE_APP_TITLE,
           },
           logo: {
             enable: true,
-            source:
-              this.systemLogo === ''
-                ? 'https://simpleadmin-2024.oss-cn-shanghai.aliyuncs.com/logo.png'
-                : this.systemLogo,
+            source: resolveLogoSource(this.systemLogo),
           },
           breadcrumb: {
             enable: this.showBreadCrumb,
@@ -130,11 +128,11 @@ export const useDynamicConfigStore = defineStore('dynamic-config', {
         });
         updatePreferences(overridesPreferences);
       } else if (config.total === 0) {
-        this.systemName = '';
-        this.systemLogo = '';
+        this.systemName = "";
+        this.systemLogo = "";
         this.showSettingButton = true;
         this.showNotice = false;
-        this.layoutType = 'sidebar-nav';
+        this.layoutType = "sidebar-nav";
         this.showBreadCrumb = true;
       }
     },

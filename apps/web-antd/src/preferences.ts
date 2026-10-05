@@ -1,4 +1,6 @@
-import { defineOverridesPreferences } from '@vben/preferences';
+import { defineOverridesPreferences } from "@vben/preferences";
+
+import { NEWBEE_LOGO_SRC } from "./brand";
 
 /**
  * @description 项目配置文件
@@ -8,12 +10,11 @@ import { defineOverridesPreferences } from '@vben/preferences';
 export const overridesPreferences = defineOverridesPreferences({
   // overrides
   app: {
-    defaultAvatar:
-      'https://simpleadmin-2024.oss-cn-shanghai.aliyuncs.com/logo.png',
+    defaultAvatar: NEWBEE_LOGO_SRC,
     /**
      * 不要动这里  后端路由模式
      */
-    accessMode: 'backend',
+    accessMode: "backend",
     /**
      * 不需要refresh token 由后端处理
      */
@@ -32,14 +33,14 @@ export const overridesPreferences = defineOverridesPreferences({
   },
   logo: {
     enable: true,
-    source: 'https://simpleadmin-2024.oss-cn-shanghai.aliyuncs.com/logo.png',
+    source: NEWBEE_LOGO_SRC,
   },
   footer: {
     /**
      * 不显示footer
      */
     enable: false,
-  }, 
+  },
   tabbar: {
     /**
      * 标签tab 持久化 关闭
@@ -56,7 +57,7 @@ export const overridesPreferences = defineOverridesPreferences({
      * 圆角大小 换算比例为1.6px = 0.1radius
      * 这里为6px 与antd保持一致
      */
-    radius: '0.375',
+    radius: "0.375",
   },
   widget: {
     /**

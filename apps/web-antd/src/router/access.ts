@@ -2,27 +2,31 @@ import type {
   ComponentRecordType,
   GenerateMenuAndRoutesOptions,
   RouteRecordStringComponent,
-} from '@vben/types';
+} from "@vben/types";
 
-import type { RouteItem } from '#/api';
+import type { RouteItem } from "#/api";
 
-import { generateAccessible } from '@vben/access';
-import { preferences } from '@vben/preferences';
-import { useAccessStore } from '@vben/stores';
+import { generateAccessible } from "@vben/access";
+import { preferences } from "@vben/preferences";
+import { useAccessStore } from "@vben/stores";
 
-import { array2tree } from '@axolo/tree-array';
-import { message } from 'ant-design-vue';
-import { cloneDeep } from 'lodash-es';
+import { array2tree } from "@axolo/tree-array";
+import { message } from "ant-design-vue";
+import { cloneDeep } from "lodash-es";
 
-import { getMenuListByRole } from '#/api';
-import { BasicLayout, IFrameView } from '#/layouts';
-import { $t } from '#/locales';
-import { useAuthStore } from '#/store';
+import { getMenuListByRole } from "#/api";
+import { BasicLayout, IFrameView } from "#/layouts";
+import { $t } from "#/locales";
+import { useAuthStore } from "#/store";
 
-import { localMenuList } from './routes/local';
+import {
+  normalizeComponentPath,
+  replaceMissingComponents,
+} from "./route-components";
+import { localMenuList } from "./routes/local";
 
-const forbiddenComponent = () => import('#/views/_core/fallback/forbidden.vue');
-const NotFoundComponent = () => import('#/views/_core/fallback/not-found.vue');
+const forbiddenComponent = () => import("#/views/_core/fallback/forbidden.vue");
+const NotFoundComponent = () => import("#/views/_core/fallback/not-found.vue");
 
 /**
  * 后台路由转vben路由
@@ -30,33 +34,15 @@ const NotFoundComponent = () => import('#/views/_core/fallback/not-found.vue');
  * @param parentPath 上级目录
  * @returns vben路由
  */
-// 规范化后端返回的 component 路径，兼容多种写法
-// - 去掉开头的 '/'
-// - 去掉前缀 'views/'（后端可能带上此目录名）
-// - 去掉后缀 '.vue'
-// - 最终返回以 '/' 开头、不带扩展名的相对 views 路径，例如：/io/discovery-pool/index
-function normalizeComponentPath(component?: string) {
-  if (!component) return '';
-  let comp = component.trim();
-  // 去掉前后多余的斜杠
-  comp = comp.replace(/^\/*/, '');
-  // 去掉 views/ 前缀
-  comp = comp.replace(/^views\//, '');
-  // 去掉 .vue 后缀
-  comp = comp.replace(/\.vue$/i, '');
-  // 确保以 '/'
-  return `/${comp}`;
-}
-
 function backMenuToVbenMenu(
   menuList: RouteItem[],
-  parentPath = '',
+  parentPath = "",
 ): RouteRecordStringComponent[] {
   const resultList: RouteRecordStringComponent[] = [];
   const authStore = useAuthStore();
   menuList.forEach((menu) => {
     // 权限处理
-    if (menu.permission && menu.permission !== '') {
+    if (menu.permission && menu.permission !== "") {
       authStore.elementPermissionList.push(menu.permission);
     }
     if (menu.menuType === 2) {
@@ -65,19 +51,19 @@ function backMenuToVbenMenu(
     }
     // 根目录为菜单形式
     // 固定有一个children  children为当前菜单
-    if (menu.path === '/' && menu.children && menu.children.length === 1) {
+    if (menu.path === "/" && menu.children && menu.children.length === 1) {
       if (!menu.children || !menu.children[0]) {
         return;
       }
 
       // 需要处理根目录为内嵌的情况 不会带InnerLink
       if (/^https?:\/\//.test(menu.children[0].path)) {
-        menu.children[0].component = 'InnerLink';
+        menu.children[0].component = "InnerLink";
         menu.children[0].path = menu.children[0].path
-          .replaceAll(/^https?:\/\//g, '')
-          .replaceAll('/#/', '')
-          .replaceAll('#', '')
-          .replaceAll(/[?&]/g, '');
+          .replaceAll(/^https?:\/\//g, "")
+          .replaceAll("/#/", "")
+          .replaceAll("#", "")
+          .replaceAll(/[?&]/g, "");
       }
 
       // 取子路径作为父级路径
@@ -86,30 +72,30 @@ function backMenuToVbenMenu(
       menu.meta = menu.children[0].meta;
       // 由于在一级路由 父级路径需要加上/
       menu.path = `/${path}`;
-      menu.component = 'RootMenu';
+      menu.component = "RootMenu";
       // 将子路径设置为''
-      menu.children[0].path = '';
+      menu.children[0].path = "";
     }
 
     // 外链: http开头 & 组件为Layout || ParentView
     // 正则判断是否为http://或者https://开头
-    let link = '';
+    let link = "";
     if (
       /^https?:\/\//.test(menu.path) &&
-      (menu.component === 'ParentView' || menu.component === 'InnerLink')
+      (menu.component === "ParentView" || menu.component === "InnerLink")
     ) {
       link = menu.path;
     }
     if (
       /^https?:\/\//.test(menu.path) &&
-      (menu.component === 'Layout' || menu.component === 'ParentView')
+      (menu.component === "Layout" || menu.component === "ParentView")
     ) {
-      menu.component = 'Link';
+      menu.component = "Link";
     }
 
     // 内嵌iframe 组件为InnerLink
-    if (/^https?:\/\//.test(menu.path) && menu.component === 'InnerLink') {
-      menu.component = 'IFrameView';
+    if (/^https?:\/\//.test(menu.path) && menu.component === "InnerLink") {
+      menu.component = "IFrameView";
     }
 
     /**
@@ -145,7 +131,7 @@ function backMenuToVbenMenu(
         const query = JSON.parse(menu.meta.params);
         vbenRoute.meta && (vbenRoute.meta.query = query);
       } catch {
-        console.error('错误的路由参数类型, 必须为[json]格式');
+        console.error("错误的路由参数类型, 必须为[json]格式");
       }
     }
 
@@ -156,8 +142,8 @@ function backMenuToVbenMenu(
       /**
        * iframe内嵌
        */
-      case 'IFrameView': {
-        vbenRoute.component = 'IFrameView';
+      case "IFrameView": {
+        vbenRoute.component = "IFrameView";
         if (vbenRoute.meta) {
           vbenRoute.meta.iframeSrc = link as any;
         }
@@ -169,43 +155,43 @@ function backMenuToVbenMenu(
          */
         vbenRoute.path = vbenRoute.path
           // 替换https:// 或者 http://
-          .replaceAll(/^\/.*?https?:\/\//g, '')
-          .replaceAll('/#/', '')
-          .replaceAll('#', '')
-          .replaceAll(/[?&]/g, '');
+          .replaceAll(/^\/.*?https?:\/\//g, "")
+          .replaceAll("/#/", "")
+          .replaceAll("#", "")
+          .replaceAll(/[?&]/g, "");
         console.log(vbenRoute.path);
         break;
       }
-      case 'Layout': {
-        vbenRoute.component = 'BasicLayout';
+      case "Layout": {
+        vbenRoute.component = "BasicLayout";
         break;
       }
       /**
        * 外链 新窗口打开
        */
-      case 'Link': {
+      case "Link": {
         if (vbenRoute.meta) {
           vbenRoute.meta.link = link as any;
         }
-        vbenRoute.component = 'BasicLayout';
+        vbenRoute.component = "BasicLayout";
         break;
       }
       /**
        * 三级以上菜单 父级component为ParentView
        * 不能为layout 会套两层BasicLayout
        */
-      case 'ParentView': {
-        vbenRoute.component = '';
+      case "ParentView": {
+        vbenRoute.component = "";
         break;
       }
       /**
        * 根目录菜单
        */
-      case 'RootMenu': {
+      case "RootMenu": {
         if (vbenRoute.meta) {
           vbenRoute.meta.hideChildrenInMenu = true;
         }
-        vbenRoute.component = 'BasicLayout';
+        vbenRoute.component = "BasicLayout";
         break;
       }
       /**
@@ -229,7 +215,7 @@ function backMenuToVbenMenu(
 }
 
 async function generateAccess(options: GenerateMenuAndRoutesOptions) {
-  const pageMap: ComponentRecordType = import.meta.glob('../views/**/*.vue');
+  const pageMap: ComponentRecordType = import.meta.glob("../views/**/*.vue");
 
   const layoutMap: ComponentRecordType = {
     BasicLayout,
@@ -237,49 +223,20 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
     NotFoundComponent,
   };
 
-  // 检查某个路由组件是否存在于 pageMap（即是否有真实的 .vue 文件）
-  function componentExists(comp?: string) {
-    if (!comp) return false;
-    // comp 形如 '/io/xxx/index'，pageMap 的 key 形如 '../views/io/xxx/index.vue'
-    const key = `../views${comp}.vue`;
-    return Boolean((pageMap as Record<string, any>)[key]);
-  }
-
-  // 递归地将不存在的组件替换为内置的 404 页面，避免控制台报错
-  function replaceMissingComponents(routes: RouteRecordStringComponent[]) {
-    for (const route of routes) {
-      // 仅处理字符串组件（排除 BasicLayout/IFrameView/NotFoundComponent 这类映射组件）
-      const comp = route.component as string | undefined;
-      if (comp && typeof comp === 'string') {
-        // 先做一次规范化，防止后端带入 '/views/**.vue'
-        const normalized = normalizeComponentPath(comp);
-        // 更新为规范化后的写法
-        route.component = normalized;
-        // 如果在真实文件映射中不存在，则替换为 404
-        if (!componentExists(normalized)) {
-          route.component = '/_core/fallback/not-found';
-        }
-      }
-      if (route.children && route.children.length > 0) {
-        replaceMissingComponents(route.children);
-      }
-    }
-  }
-
   return await generateAccessible(preferences.app.accessMode, {
     ...options,
     fetchMenuListAsync: async () => {
       // 清除以前的message
       message.destroy();
       message.loading({
-        content: `${$t('common.loadingMenu')}...`,
+        content: `${$t("common.loadingMenu")}...`,
         duration: 1,
       });
       // 后台返回路由/菜单
       const menuData = await getMenuListByRole();
-      
+
       let vbenMenuList: RouteRecordStringComponent[] = [];
-      
+
       if (menuData.total > 0) {
         const menuTreeData: RouteItem[] = array2tree(
           menuData.data,
@@ -291,11 +248,11 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
         vbenMenuList = backMenuToVbenMenu(menuTreeData);
         accessStore.setAccessCodes(authStore.elementPermissionList);
       }
-      
+
       // 特别注意 这里要深拷贝 - 无论后端菜单是否为空都返回本地菜单
       const menuList = [...cloneDeep(localMenuList), ...vbenMenuList];
       // 在返回之前，替换所有找不到真实组件的路由为内置的 404 页面，避免“未找到对应组件”的报错
-      replaceMissingComponents(menuList);
+      replaceMissingComponents(menuList, pageMap, layoutMap);
       // console.log('menuList', menuList);
       return menuList;
     },
