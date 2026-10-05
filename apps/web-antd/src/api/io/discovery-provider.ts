@@ -65,7 +65,7 @@ export namespace DiscoveryProviderAPI {
    * 获取所有发现Provider列表
    */
   export function listProviders() {
-    return requestClient.post<ProviderMetadata[]>('/io-rpc/discoveryprovider/list_discovery_providers', {});
+    return requestClient.post<ProviderMetadata[]>('/io-api/discoveryprovider/list_discovery_providers', {});
   }
 
   /**
@@ -73,7 +73,7 @@ export namespace DiscoveryProviderAPI {
    */
   export function getProviderSchema(providerId: string) {
     return requestClient.post<ProviderSchemaInfo>(
-      '/io-rpc/discoveryprovider/get_provider_schema',
+      '/io-api/discoveryprovider/get_provider_schema',
       { provider_id: providerId }
     );
   }
@@ -83,7 +83,7 @@ export namespace DiscoveryProviderAPI {
    */
   export function testConnection(data: TestConnectionReq) {
     return requestClient.post<TestConnectionData>(
-      '/io-rpc/discoveryprovider/test_provider_connection',
+      '/io-api/discoveryprovider/test_provider_connection',
       {
         provider_id: data.providerId,
         config: JSON.stringify(data.config)

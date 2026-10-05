@@ -33,3 +33,6 @@ export {
 
 export type { FlattenedItem } from '@vben-core/shadcn-ui';
 export { globalShareState } from '@vben-core/shared/global-state';
+
+// Monaco Editor 组件
+export * from './monaco-editor';

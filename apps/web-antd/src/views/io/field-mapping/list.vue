@@ -85,6 +85,7 @@ import type { TablePaginationConfig } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 
 import { getFieldMappingList, deleteFieldMapping } from '#/api/io/field-mapping';
+import type { IDS } from '#/api/common';
 import type { FieldMappingInfo, FieldMappingListReq } from '#/api/io/model';
 
 const router = useRouter();
@@ -127,17 +128,17 @@ function resetQuery() {
 }
 
 function goCreate() {
-  router.push({ name: 'FieldMappingEdit' });
+  router.push({ name: 'io-field-mapping-create' });
 }
 
 function goEdit(id?: number) {
   if (!id) return;
-  router.push({ name: 'FieldMappingEdit', params: { id: String(id) } });
+  router.push({ name: 'io-field-mapping-edit', params: { id: String(id) } });
 }
 
 function goDetail(id?: number) {
   if (!id) return;
-  router.push({ name: 'FieldMappingDetail', params: { id: String(id) } });
+  router.push({ name: 'io-field-mapping-detail', params: { id: String(id) } });
 }
 
 function batchDelete() {
@@ -147,7 +148,7 @@ function batchDelete() {
     content: `确认删除选中的 ${selectedRowKeys.value.length} 条映射？`,
     onOk: async () => {
       try {
-        await deleteFieldMapping(selectedRowKeys.value as any);
+        await deleteFieldMapping(selectedRowKeys.value as IDS);
         message.success('删除成功');
         selectedRowKeys.value = [];
         fetchData();
@@ -168,7 +169,7 @@ async function handleDelete(id?: number) {
   Modal.confirm({ title: '删除确认', onOk: async () => {
     try {
       const { deleteFieldMapping } = await import('#/api/io/field-mapping');
-      await deleteFieldMapping([id] as any);
+      await deleteFieldMapping([id] as IDS);
       message.success('删除成功');
       fetchData();
     } catch {}

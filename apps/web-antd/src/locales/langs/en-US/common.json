@@ -68,5 +68,18 @@
   "wrongFormat": "Wrong format",
   "required": "Required",
   "viewLog": "View logs",
-  "edit": "Edit"
+  "edit": "Edit",
+  "add": "Add",
+  "batchDelete": "Batch Delete",
+  "expandAll": "Expand All",
+  "collapseAll": "Collapse All",
+  "close": "Close",
+  "refresh": "Refresh",
+  "confirmDelete": "Confirm deletion?",
+  "noData": "No Data",
+  "tip": "Tip",
+  "ok": "OK",
+  "selectAtLeastOne": "Please select at least one item",
+  "validateFailed": "Form validation failed",
+  "operationFailed": "Operation failed"
 }

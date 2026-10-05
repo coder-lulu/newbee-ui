@@ -1,25 +1,25 @@
 import { defineConfig } from '@vben/vite-config';
 
-// 自行取消注释来启用按需导入功能
-// import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
-// import Components from 'unplugin-vue-components/vite';
+// 启用按需导入 Ant Design Vue 组件，自动解析 a-* 标签（a-modal、a-timeline 等）
+import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
+import Components from 'unplugin-vue-components/vite';
 
 export default defineConfig(async () => {
   return {
     application: {},
     vite: {
       plugins: [
-        // Components({
-        //   dirs: [], // 默认会导入src/components目录下所有组件 不需要
-        //   dts: './types/components.d.ts', // 输出类型文件
-        //   resolvers: [
-        //     AntDesignVueResolver({
-        //       // 需要排除Button组件 全局已经默认导入了
-        //       exclude: ['Button'],
-        //       importStyle: false, // css in js
-        //     }),
-        //   ],
-        // }),
+        Components({
+          dirs: [], // 不扫描本地组件目录，仅做库组件解析
+          dts: './types/components.d.ts', // 生成自动导入的类型提示
+          resolvers: [
+            AntDesignVueResolver({
+              // 可按需排除已全局引入的组件
+              exclude: ['Button'],
+              importStyle: false, // 使用 css-in-js（VBen 默认样式策略）
+            }),
+          ],
+        }),
       ],
       server: {
         proxy: {
@@ -32,7 +32,7 @@ export default defineConfig(async () => {
           '/cmdb-api': {
             changeOrigin: true,
             rewrite: (path) => path.replace(/^\/cmdb-api/, ''),
-            target: 'http://127.0.0.1:9200',
+            target: 'http://127.0.0.1:9207',
             ws: true,
           },
           '/fms-api': {
@@ -56,7 +56,13 @@ export default defineConfig(async () => {
           '/ops-api': {
             changeOrigin: true,
             rewrite: (path) => path.replace(/^\/ops-api/, ''),
-            target: 'http://127.0.0.1:9402',
+            target: 'http://127.0.0.1:9601',
+            ws: true,
+          },
+          '/ops-center-api': {
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/ops-center-api/, ''),
+            target: 'http://127.0.0.1:9601',
             ws: true,
           },
           '/sys-api': {

@@ -33,14 +33,14 @@ export interface TaskResultResp {
 }
 
 export async function createTask(data: CreateTaskReq): Promise<CreateTaskResp> {
-  return requestClient.post<CreateTaskResp>('/ops/task/create', data);
+  return requestClient.post<CreateTaskResp>('/ops-center-api/ops/task/create', data);
 }
 
 export async function getTaskStatus(taskId: string): Promise<TaskStatusResp> {
-  return requestClient.get<TaskStatusResp>(`/ops/task/status/${taskId}`);
+  return requestClient.get<TaskStatusResp>(`/ops-center-api/ops/task/status/${taskId}`);
 }
 
 export async function getTaskResult(taskId: string): Promise<TaskResultResp> {
-  return requestClient.get<TaskResultResp>(`/ops/task/result/${taskId}`);
+  return requestClient.get<TaskResultResp>(`/ops-center-api/ops/task/result/${taskId}`);
 }
 

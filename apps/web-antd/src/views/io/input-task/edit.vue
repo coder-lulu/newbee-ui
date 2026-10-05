@@ -39,6 +39,21 @@
             </a-form-item>
           </a-col>
         </a-row>
+        <a-row :gutter="16">
+          <a-col :span="12">
+            <a-form-item label="发现池" name="discoveryPoolId">
+              <a-select
+                v-model:value="form.discoveryPoolId"
+                placeholder="选择关联的发现池"
+                allow-clear
+                :loading="dpLoading"
+                :options="dpOptions"
+                show-search
+                :filter-option="(input, option) => (option?.label as string)?.toLowerCase().includes(input.toLowerCase())"
+              />
+            </a-form-item>
+          </a-col>
+        </a-row>
 
         <a-form-item label="任务配置(JSON)" name="taskConfig">
           <a-textarea v-model:value="form.taskConfig" :rows="6" placeholder="JSON 字符串" />
@@ -65,6 +80,7 @@ import { message } from 'ant-design-vue';
 import { useRoute, useRouter } from 'vue-router';
 import { createInputTask, getInputTaskById, updateInputTask } from '#/api/io/input-task';
 import type { InputTaskInfo } from '#/api/io/model';
+import { getDiscoveryPoolList } from '#/api/io/discovery-pool';
 
 const route = useRoute();
 const router = useRouter();
@@ -118,7 +134,23 @@ async function onSubmit() {
 
 function goBack() { router.back(); }
 
-onMounted(() => { if (isEdit) loadDetail(Number(idParam)); });
+// 发现池下拉
+const dpLoading = ref(false);
+const dpOptions = ref<{ label: string; value: number }[]>([]);
+async function loadDiscoveryPools() {
+  dpLoading.value = true;
+  try {
+    const res = await getDiscoveryPoolList({ page: 1, pageSize: 100 } as any);
+    const list = (res as any)?.data || (res as any)?.rows || (res as any) || [];
+    dpOptions.value = (list?.list || list)?.map((it: any) => ({ label: `${it.name} (${it.discoveryType})`, value: it.id }));
+  } catch {}
+  finally { dpLoading.value = false; }
+}
+
+onMounted(() => {
+  loadDiscoveryPools();
+  if (isEdit) loadDetail(Number(idParam));
+});
 </script>
 
 <style scoped></style>

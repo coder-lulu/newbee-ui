@@ -4,7 +4,7 @@ import { Button, message, Modal, Steps } from 'ant-design-vue';
 import { RightOutlined, SaveOutlined } from '@ant-design/icons-vue';
 import { createDiscoveryPool } from '#/api/io/discovery-pool';
 
-import AgentSelector from './AgentSelector.vue';
+import ProxySelector from './ProxySelector.vue';
 import AttributeMappingConfig from './AttributeMappingConfig.vue';
 import DiscoveryMethodSelector from './DiscoveryMethodSelector.vue';
 import DiscoveryParameterConfig from './DiscoveryParameterConfig.vue';
@@ -216,7 +216,7 @@ defineExpose({
         </div>
 
         <div v-show="currentStep === 2" class="step-content">
-          <AgentSelector
+          <ProxySelector
             :selected-agent-id="discoveryForm.agentId"
             :method="discoveryForm.method"
             @agent-selected="handleAgentSelected"

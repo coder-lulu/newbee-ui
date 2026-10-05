@@ -88,6 +88,7 @@ import { useRouter } from 'vue-router';
 
 import { getOutputTaskList, deleteOutputTask, startOutputTask, pauseOutputTask, cancelOutputTask } from '#/api/io/output-task';
 import type { OutputTaskInfo, OutputTaskListReq } from '#/api/io/model';
+import type { IDS } from '#/api/common';
 
 const router = useRouter();
 const loading = ref(false);
@@ -125,9 +126,9 @@ function resetQuery() {
   fetchData();
 }
 
-function goCreate() { router.push({ name: 'OutputTaskEdit' }); }
-function goEdit(id?: number) { if (id) router.push({ name: 'OutputTaskEdit', params: { id: String(id) } }); }
-function goDetail(id?: number) { if (id) router.push({ name: 'OutputTaskDetail', params: { id: String(id) } }); }
+function goCreate() { router.push({ name: 'io-output-task-create' }); }
+function goEdit(id?: number) { if (id) router.push({ name: 'io-output-task-edit', params: { id: String(id) } }); }
+function goDetail(id?: number) { if (id) router.push({ name: 'io-output-task-detail', params: { id: String(id) } }); }
 
 function batchDelete() {
   if (!selectedRowKeys.value.length) return;
@@ -136,7 +137,7 @@ function batchDelete() {
     content: `确认删除选中的 ${selectedRowKeys.value.length} 个任务？`,
     onOk: async () => {
       try {
-        await deleteOutputTask(selectedRowKeys.value as any);
+        await deleteOutputTask(selectedRowKeys.value as IDS);
         message.success('删除成功');
         selectedRowKeys.value = [];
         fetchData();

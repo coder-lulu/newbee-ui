@@ -44,13 +44,13 @@ const loadPools = async () => {
   try {
     const res = await getDiscoveryPoolList({
       page: pagination.value.current,
-      page_size: pagination.value.pageSize,
+      pageSize: pagination.value.pageSize,
       // 可以根据需要添加过滤条件
     });
     
     if (res && res.data) {
-      pools.value = res.data.data || [];
-      pagination.value.total = Number(res.data.total) || 0;
+      pools.value = res.data || [];
+      pagination.value.total = Number(res.total) || 0;
     } else {
       pools.value = [];
       pagination.value.total = 0;

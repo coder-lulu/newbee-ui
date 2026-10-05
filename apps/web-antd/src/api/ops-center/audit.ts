@@ -12,7 +12,7 @@ export interface AuditEvent {
 }
 
 export async function listAudit(): Promise<PageResult<AuditEvent>> {
-  const ret = await requestClient.get<any>('/ops/audit/list');
+  const ret = await requestClient.get<any>('/ops-center-api/ops/audit/list');
   return {
     data: ret?.items ?? ret?.Items ?? [],
     total: ret?.total ?? ret?.Total ?? 0,

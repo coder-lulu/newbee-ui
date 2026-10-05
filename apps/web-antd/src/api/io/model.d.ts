@@ -272,3 +272,110 @@ export interface MappingLogListReq extends PageQuery {
 }
 
 export interface MappingLogListResp extends PageResult<MappingLogInfo> {}
+
+// ========== Config Center ==========
+export type ValueType = 'string' | 'number' | 'boolean' | 'json' | 'array' | 'object';
+export type ConfigScope = 'global' | 'service' | 'instance';
+export type ChangeType = 'create' | 'update' | 'delete' | 'rollback';
+
+export interface ConfigItem {
+  id?: number;
+  tenantId?: number;
+  configKey: string;
+  configValue: string;
+  valueType?: ValueType;
+  category?: string;
+  serviceName?: string;
+  description?: string;
+  defaultValue?: string;
+  version?: number;
+  status?: number;
+  isReadonly?: boolean;
+  isSensitive?: boolean;
+  scope?: ConfigScope;
+  configGroup?: string;
+  createdAt?: number;
+  updatedAt?: number;
+}
+
+export interface ConfigAuditLog {
+  id?: number;
+  tenantId?: number;
+  configKey: string;
+  oldValue?: string;
+  newValue?: string;
+  changeType?: ChangeType;
+  changedBy?: number;
+  changedByName?: string;
+  serviceName?: string;
+  category?: string;
+  configGroup?: string;
+  changeReason?: string;
+  ipAddress?: string;
+  userAgent?: string;
+  oldVersion?: number;
+  newVersion?: number;
+  isRollback?: boolean;
+  rollbackFromLogId?: string;
+  createdAt?: number;
+}
+
+export interface ListConfigReq extends PageQuery {
+  serviceName?: string;
+  category?: string;
+  configGroup?: string;
+  keyword?: string;
+}
+
+export interface ListConfigResp extends PageResult<ConfigItem> {}
+
+export interface GetConfigReq {
+  configKey: string;
+}
+
+export interface GetConfigResp {
+  data?: ConfigItem;
+}
+
+export interface CreateConfigReq {
+  configKey: string;
+  configValue: string;
+  valueType?: ValueType;
+  category?: string;
+  serviceName?: string;
+  description?: string;
+  defaultValue?: string;
+  isReadonly?: boolean;
+  isSensitive?: boolean;
+  scope?: ConfigScope;
+  configGroup?: string;
+}
+
+export interface UpdateConfigReq extends Partial<CreateConfigReq> {
+  configKey: string;
+}
+
+export interface DeleteConfigReq {
+  configKey: string;
+}
+
+export interface ListAuditLogReq extends PageQuery {
+  configKey?: string;
+  changeType?: ChangeType;
+  startTime?: number;
+  endTime?: number;
+}
+
+export interface ListAuditLogResp extends PageResult<ConfigAuditLog> {}
+
+export interface GetConfigHistoryReq {
+  configKey: string;
+}
+
+export interface GetConfigHistoryResp {
+  data?: ConfigAuditLog[];
+}
+
+export interface RollbackConfigReq {
+  auditLogId: number;
+}

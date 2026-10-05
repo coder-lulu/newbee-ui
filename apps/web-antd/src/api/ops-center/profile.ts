@@ -16,19 +16,19 @@ export interface AccessProfileReq {
 }
 
 export async function createProfile(data: AccessProfileReq) {
-  return requestClient.postWithMsg<void>('/ops/profile/create', data);
+  return requestClient.postWithMsg<void>('/ops-center-api/ops/profile/create', data);
 }
 
 export async function updateProfile(data: AccessProfileReq) {
-  return requestClient.postWithMsg<void>('/ops/profile/update', data);
+  return requestClient.postWithMsg<void>('/ops-center-api/ops/profile/update', data);
 }
 
 export async function getProfile(params?: { ciId?: string }): Promise<AccessProfile> {
-  return requestClient.get<AccessProfile>('/ops/profile/get', { params });
+  return requestClient.get<AccessProfile>('/ops-center-api/ops/profile/get', { params });
 }
 
 export async function listProfiles(): Promise<PageResult<AccessProfile>> {
-  const ret = await requestClient.get<any>('/ops/profile/list');
+  const ret = await requestClient.get<any>('/ops-center-api/ops/profile/list');
   return {
     data: ret?.items ?? ret?.Items ?? [],
     total: ret?.total ?? ret?.Total ?? 0,
@@ -36,6 +36,6 @@ export async function listProfiles(): Promise<PageResult<AccessProfile>> {
 }
 
 export async function deleteProfile(params: { ciId: string }) {
-  return requestClient.deleteWithMsg<void>('/ops/profile/delete', { params });
+  return requestClient.deleteWithMsg<void>('/ops-center-api/ops/profile/delete', { params });
 }
 

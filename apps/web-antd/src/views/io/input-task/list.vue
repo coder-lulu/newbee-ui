@@ -86,6 +86,7 @@ import { useRouter } from 'vue-router';
 
 import { getInputTaskList, deleteInputTask, startInputTask, pauseInputTask, cancelInputTask } from '#/api/io/input-task';
 import type { InputTaskInfo, InputTaskListReq } from '#/api/io/model';
+import type { IDS } from '#/api/common';
 
 const router = useRouter();
 const loading = ref(false);
@@ -132,9 +133,9 @@ function safePushByName(name: string, params?: Record<string, any>) {
   router.push({ name: name as any, params });
 }
 
-function goCreate() { safePushByName('InputTaskEdit'); }
-function goEdit(id?: number) { if (id) safePushByName('InputTaskEdit', { id: String(id) }); }
-function goDetail(id?: number) { if (id) safePushByName('InputTaskDetail', { id: String(id) }); }
+function goCreate() { safePushByName('io-input-task-create'); }
+function goEdit(id?: number) { if (id) safePushByName('io-input-task-edit', { id: String(id) }); }
+function goDetail(id?: number) { if (id) safePushByName('io-input-task-detail', { id: String(id) }); }
 
 function batchDelete() {
   if (!selectedRowKeys.value.length) return;
@@ -143,7 +144,7 @@ function batchDelete() {
     content: `确认删除选中的 ${selectedRowKeys.value.length} 个任务？`,
     onOk: async () => {
       try {
-        await deleteInputTask(selectedRowKeys.value as any);
+        await deleteInputTask(selectedRowKeys.value as IDS);
         message.success('删除成功');
         selectedRowKeys.value = [];
         fetchData();

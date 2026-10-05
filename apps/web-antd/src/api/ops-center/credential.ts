@@ -15,19 +15,19 @@ export interface CredentialCreateReq {
 }
 
 export async function createCredential(data: CredentialCreateReq) {
-  return requestClient.postWithMsg<void>('/ops/credential/create', data);
+  return requestClient.postWithMsg<void>('/ops-center-api/ops/credential/create', data);
 }
 
 export async function updateCredential(data: CredentialCreateReq) {
-  return requestClient.postWithMsg<void>('/ops/credential/update', data);
+  return requestClient.postWithMsg<void>('/ops-center-api/ops/credential/update', data);
 }
 
 export async function getCredential(id: string): Promise<CredentialRef> {
-  return requestClient.get<CredentialRef>(`/ops/credential/${id}`);
+  return requestClient.get<CredentialRef>(`/ops-center-api/ops/credential/${id}`);
 }
 
 export async function listCredential(): Promise<PageResult<CredentialRef>> {
-  const ret = await requestClient.get<any>('/ops/credential/list');
+  const ret = await requestClient.get<any>('/ops-center-api/ops/credential/list');
   return {
     data: ret?.items ?? ret?.Items ?? [],
     total: ret?.total ?? ret?.Total ?? 0,
@@ -35,6 +35,6 @@ export async function listCredential(): Promise<PageResult<CredentialRef>> {
 }
 
 export async function deleteCredential(id: string) {
-  return requestClient.deleteWithMsg<void>(`/ops/credential/delete/${id}`);
+  return requestClient.deleteWithMsg<void>(`/ops-center-api/ops/credential/delete/${id}`);
 }
 

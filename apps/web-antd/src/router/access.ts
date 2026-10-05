@@ -30,6 +30,24 @@ const NotFoundComponent = () => import('#/views/_core/fallback/not-found.vue');
  * @param parentPath 上级目录
  * @returns vben路由
  */
+// 规范化后端返回的 component 路径，兼容多种写法
+// - 去掉开头的 '/'
+// - 去掉前缀 'views/'（后端可能带上此目录名）
+// - 去掉后缀 '.vue'
+// - 最终返回以 '/' 开头、不带扩展名的相对 views 路径，例如：/io/discovery-pool/index
+function normalizeComponentPath(component?: string) {
+  if (!component) return '';
+  let comp = component.trim();
+  // 去掉前后多余的斜杠
+  comp = comp.replace(/^\/*/, '');
+  // 去掉 views/ 前缀
+  comp = comp.replace(/^views\//, '');
+  // 去掉 .vue 后缀
+  comp = comp.replace(/\.vue$/i, '');
+  // 确保以 '/'
+  return `/${comp}`;
+}
+
 function backMenuToVbenMenu(
   menuList: RouteItem[],
   parentPath = '',
@@ -194,7 +212,8 @@ function backMenuToVbenMenu(
        * 其他自定义组件 如system/user/index 拼接/
        */
       default: {
-        vbenRoute.component = `/${menu.component}`;
+        // 标准化后端返回的组件路径，避免出现 '/views/**.vue' 这类无法被 import.meta.glob 命中的路径
+        vbenRoute.component = normalizeComponentPath(menu.component);
         break;
       }
     }
@@ -217,6 +236,35 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
     IFrameView,
     NotFoundComponent,
   };
+
+  // 检查某个路由组件是否存在于 pageMap（即是否有真实的 .vue 文件）
+  function componentExists(comp?: string) {
+    if (!comp) return false;
+    // comp 形如 '/io/xxx/index'，pageMap 的 key 形如 '../views/io/xxx/index.vue'
+    const key = `../views${comp}.vue`;
+    return Boolean((pageMap as Record<string, any>)[key]);
+  }
+
+  // 递归地将不存在的组件替换为内置的 404 页面，避免控制台报错
+  function replaceMissingComponents(routes: RouteRecordStringComponent[]) {
+    for (const route of routes) {
+      // 仅处理字符串组件（排除 BasicLayout/IFrameView/NotFoundComponent 这类映射组件）
+      const comp = route.component as string | undefined;
+      if (comp && typeof comp === 'string') {
+        // 先做一次规范化，防止后端带入 '/views/**.vue'
+        const normalized = normalizeComponentPath(comp);
+        // 更新为规范化后的写法
+        route.component = normalized;
+        // 如果在真实文件映射中不存在，则替换为 404
+        if (!componentExists(normalized)) {
+          route.component = '/_core/fallback/not-found';
+        }
+      }
+      if (route.children && route.children.length > 0) {
+        replaceMissingComponents(route.children);
+      }
+    }
+  }
 
   return await generateAccessible(preferences.app.accessMode, {
     ...options,
@@ -246,6 +294,8 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
       
       // 特别注意 这里要深拷贝 - 无论后端菜单是否为空都返回本地菜单
       const menuList = [...cloneDeep(localMenuList), ...vbenMenuList];
+      // 在返回之前，替换所有找不到真实组件的路由为内置的 404 页面，避免“未找到对应组件”的报错
+      replaceMissingComponents(menuList);
       // console.log('menuList', menuList);
       return menuList;
     },

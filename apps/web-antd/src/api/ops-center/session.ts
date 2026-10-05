@@ -63,29 +63,29 @@ export interface SessionListParams {
 export async function createSession(
   data: CreateSessionReq,
 ): Promise<CreateSessionResp> {
-  return requestClient.post<CreateSessionResp>('/ops/session/create', data);
+  return requestClient.post<CreateSessionResp>('/ops-center-api/ops/session/create', data);
 }
 
 export async function closeSession(
   data: CloseSessionReq,
 ): Promise<{ ok: boolean; closedAt: number }> {
-  return requestClient.post('/ops/session/close', data);
+  return requestClient.post('/ops-center-api/ops/session/close', data);
 }
 
 export async function getSessionById(id: string): Promise<SessionItem> {
-  return requestClient.get<SessionItem>(`/ops/session/${id}`);
+  return requestClient.get<SessionItem>(`/ops-center-api/ops/session/${id}`);
 }
 
 export async function getSessionByQuery(
   params: Partial<Pick<SessionItem, 'id' | 'ciId' | 'status' | 'protocol' | 'proxyId' | 'userId'>>,
 ): Promise<SessionItem> {
-  return requestClient.get<SessionItem>('/ops/session/get', { params });
+  return requestClient.get<SessionItem>('/ops-center-api/ops/session/get', { params });
 }
 
 export async function listSessions(
   params: SessionListParams,
 ): Promise<PageResult<SessionItem>> {
-  const ret = await requestClient.get<any>('/ops/session/list', { params });
+  const ret = await requestClient.get<any>('/ops-center-api/ops/session/list', { params });
   // 后端为 { Items, Total }，适配到前端 PageResult { data, total }
   return {
     data: ret?.items ?? ret?.Items ?? [],

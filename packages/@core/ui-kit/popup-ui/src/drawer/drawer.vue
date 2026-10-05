@@ -161,7 +161,8 @@ const isClosed = ref(true);
 watch(
   () => state?.value?.isOpen,
   (value) => {
-    isClosed.value = false;
+    // 仅在打开时标记已打开；关闭时保持 isClosed=true，从而隐藏内容
+    isClosed.value = !value;
     if (value && !unref(hasOpened)) {
       hasOpened.value = true;
     }

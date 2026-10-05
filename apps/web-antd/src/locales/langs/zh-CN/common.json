@@ -68,5 +68,18 @@
   "wrongFormat": "格式错误",
   "required": "必须",
   "viewLog": "查看日志",
-  "edit": "编辑"
+  "edit": "编辑",
+  "add": "新增",
+  "batchDelete": "批量删除",
+  "expandAll": "展开全部",
+  "collapseAll": "收起全部",
+  "close": "关闭",
+  "refresh": "刷新",
+  "confirmDelete": "确认删除此项？",
+  "noData": "暂无数据",
+  "tip": "提示",
+  "ok": "确定",
+  "selectAtLeastOne": "请至少选择一项",
+  "validateFailed": "表单验证失败",
+  "operationFailed": "操作失败"
 }

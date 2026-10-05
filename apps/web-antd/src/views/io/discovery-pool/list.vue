@@ -62,6 +62,7 @@ import {
   triggerDiscoveryPool,
 } from '#/api/io/discovery-pool';
 import type { DiscoveryPoolInfo, DiscoveryPoolListReq } from '#/api/io/model';
+import type { IDS } from '#/api/common';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -184,17 +185,17 @@ function resetQuery() {
 }
 
 function goCreate() {
-  router.push({ name: 'DiscoveryPoolEdit' });
+  router.push({ name: 'io-discovery-pool-create' });
 }
 
 function goEdit(id: number | undefined) {
   if (!id) return;
-  router.push({ name: 'DiscoveryPoolEdit', params: { id: String(id) } });
+  router.push({ name: 'io-discovery-pool-edit', params: { id: String(id) } });
 }
 
 function goDetail(id: number | undefined) {
   if (!id) return;
-  router.push({ name: 'DiscoveryPoolDetail', params: { id: String(id) } });
+  router.push({ name: 'io-discovery-pool-detail', params: { id: String(id) } });
 }
 
 async function toggleEnable(record: DiscoveryPoolInfo) {
@@ -250,7 +251,7 @@ function handleDelete(id?: number) {
     onOk: async () => {
       try {
         const { deleteDiscoveryPool } = await import('#/api/io/discovery-pool');
-        await deleteDiscoveryPool([id] as any);
+        await deleteDiscoveryPool([id] as IDS);
         message.success('删除成功');
         fetchData();
       } catch {}
