@@ -15,7 +15,7 @@ export interface OauthProviderInfo {
   tokenUrl?: string;
   authStyle?: number;
   infoUrl?: string;
-  
+
   // 增强字段 - 重构后新增
   displayName?: string;
   type?: string;
@@ -30,9 +30,9 @@ export interface OauthProviderInfo {
   successCount?: number;
   failureCount?: number;
   lastUsedAt?: number;
-  
+
   // 状态字段
-  status?: 'active' | 'inactive' | 'error';
+  status?: "active" | "error" | "inactive";
   responseTime?: number;
 }
 
@@ -102,32 +102,32 @@ export interface UserBoundAccountInfo {
  */
 export interface OauthStatistics {
   totalProviders: number;
-  activeProviders: number;
   totalUsers: number;
   totalLogins: number;
+  todayLogins: number;
+  avgResponseTime: number;
+  weeklyGrowth: number;
+  monthlyGrowth: number;
   successRate: number;
   providerStats: ProviderStatistic[];
-  loginTrends: LoginTrendData[];
+  loginTrend: LoginTrendData[];
 }
-
-/**
- *  @description: Provider统计
- */
 export interface ProviderStatistic {
   providerId: number;
   providerName: string;
-  providerType: string;
+  displayName: string;
+  type: string;
+  iconUrl?: string;
+  totalUsage: number;
   successCount: number;
   failureCount: number;
-  userCount: number;
   successRate: number;
+  avgResponseTime: number;
+  lastUsed?: number;
 }
-
-/**
- *  @description: 登录趋势数据
- */
 export interface LoginTrendData {
   date: string;
+  count: number;
   successCount: number;
   failureCount: number;
 }

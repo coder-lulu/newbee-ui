@@ -1,9 +1,9 @@
-import type { ID, IDS, PageQuery, PageResult } from '#/api/common';
+import type { ID, IDS, PageQuery, PageResult } from "#/api/common";
 
 export type { ID, IDS, PageQuery, PageResult };
 
-export type DiscoveryType = 'file' | 'api' | 'sdk' | 'builtin';
-export type PoolStatus = 'active' | 'inactive' | 'error' | 'maintain';
+export type DiscoveryType = "api" | "builtin" | "file" | "sdk";
+export type PoolStatus = "active" | "error" | "inactive" | "maintain";
 
 export interface DiscoveryPoolInfo {
   id?: number;
@@ -21,9 +21,9 @@ export interface DiscoveryPoolInfo {
   totalRuns?: number;
   successRuns?: number;
   failedRuns?: number;
-  lastRunAt?: number | null;
-  lastSuccessAt?: number | null;
-  lastError?: string | null;
+  lastRunAt?: null | number;
+  lastSuccessAt?: null | number;
+  lastError?: null | string;
   metadata?: string; // JSON string
   createdAt?: number;
   updatedAt?: number;
@@ -35,7 +35,7 @@ export interface DiscoveryPoolListReq extends PageQuery {
   poolStatus?: PoolStatus;
 }
 
-export interface DiscoveryPoolListResp extends PageResult<DiscoveryPoolInfo> {}
+export type DiscoveryPoolListResp = PageResult<DiscoveryPoolInfo>;
 
 export interface CreateDiscoveryPoolReq {
   name: string;
@@ -51,7 +51,8 @@ export interface CreateDiscoveryPoolReq {
   metadata?: string;
 }
 
-export interface UpdateDiscoveryPoolReq extends Partial<CreateDiscoveryPoolReq> {
+export interface UpdateDiscoveryPoolReq
+  extends Partial<CreateDiscoveryPoolReq> {
   id: ID;
 }
 
@@ -61,9 +62,23 @@ export interface BaseMsgResp {
 }
 
 // ========== Field Mapping ==========
-export type MappingType = 'input' | 'output' | 'transform' | 'validation';
-export type DataType = 'string' | 'int' | 'float' | 'bool' | 'date' | 'datetime' | 'json' | 'array';
-export type TransformType = 'direct' | 'format' | 'calculate' | 'lookup' | 'conditional' | 'custom';
+export type MappingType = "input" | "output" | "transform" | "validation";
+export type DataType =
+  | "array"
+  | "bool"
+  | "date"
+  | "datetime"
+  | "float"
+  | "int"
+  | "json"
+  | "string";
+export type TransformType =
+  | "calculate"
+  | "conditional"
+  | "custom"
+  | "direct"
+  | "format"
+  | "lookup";
 
 export interface FieldMappingInfo {
   id?: number;
@@ -97,9 +112,9 @@ export interface FieldMappingInfo {
   usageCount?: number;
   successCount?: number;
   failedCount?: number;
-  lastUsedAt?: number | null;
-  lastError?: string | null;
-  lastErrorAt?: number | null;
+  lastUsedAt?: null | number;
+  lastError?: null | string;
+  lastErrorAt?: null | number;
   version?: string;
   versionHistory?: string; // JSON array string
   metadata?: string; // JSON string
@@ -113,7 +128,7 @@ export interface FieldMappingListReq extends PageQuery {
   isActive?: boolean;
 }
 
-export interface FieldMappingListResp extends PageResult<FieldMappingInfo> {}
+export type FieldMappingListResp = PageResult<FieldMappingInfo>;
 
 export interface CreateFieldMappingReq extends Partial<FieldMappingInfo> {
   mappingName: string;
@@ -127,8 +142,14 @@ export interface UpdateFieldMappingReq extends Partial<CreateFieldMappingReq> {
 }
 
 // ========== Input Task ==========
-export type TaskType = 'file' | 'api' | 'sdk' | 'builtin' | 'manual';
-export type TaskStatus = 'pending' | 'running' | 'completed' | 'failed' | 'cancelled' | 'paused';
+export type TaskType = "api" | "builtin" | "file" | "manual" | "sdk";
+export type TaskStatus =
+  | "cancelled"
+  | "completed"
+  | "failed"
+  | "paused"
+  | "pending"
+  | "running";
 
 export interface InputTaskInfo {
   id?: number;
@@ -141,17 +162,18 @@ export interface InputTaskInfo {
   taskConfig?: string; // JSON
   validationConfig?: string; // JSON
   outputTargets?: string; // JSON array
-  scheduledAt?: number | null;
-  startedAt?: number | null;
-  completedAt?: number | null;
+  scheduledAt?: null | number;
+  startedAt?: null | number;
+  completedAt?: null | number;
+  totalRecords?: number;
   processedRecords?: number;
   successRecords?: number;
   failedRecords?: number;
-  errorMessage?: string | null;
+  errorMessage?: null | string;
   errorDetails?: string; // JSON
   maxRetry?: number;
   retryCount?: number;
-  nextRetryAt?: number | null;
+  nextRetryAt?: null | number;
   discoveryPoolId?: number;
   workerId?: string;
   progressPercent?: number;
@@ -168,7 +190,7 @@ export interface InputTaskListReq extends PageQuery {
   discoveryPoolId?: number;
 }
 
-export interface InputTaskListResp extends PageResult<InputTaskInfo> {}
+export type InputTaskListResp = PageResult<InputTaskInfo>;
 
 export interface CreateInputTaskReq extends Partial<InputTaskInfo> {
   name: string;
@@ -180,7 +202,14 @@ export interface UpdateInputTaskReq extends Partial<CreateInputTaskReq> {
 }
 
 // ========== Output Task ==========
-export type OutputType = 'kafka' | 'elasticsearch' | 'database' | 'api' | 'file' | 'webhook' | 'email';
+export type OutputType =
+  | "api"
+  | "database"
+  | "elasticsearch"
+  | "email"
+  | "file"
+  | "kafka"
+  | "webhook";
 
 export interface OutputTaskInfo {
   id?: number;
@@ -191,23 +220,24 @@ export interface OutputTaskInfo {
   priority?: number;
   timeoutSeconds?: number;
   dataSource?: string; // JSON
-  outputFormat?: 'json' | 'xml' | 'csv' | 'excel' | 'txt' | 'parquet' | 'avro';
+  outputFormat?: "avro" | "csv" | "excel" | "json" | "parquet" | "txt" | "xml";
   pushTargets?: string; // JSON array
   compressionConfig?: string; // JSON
   transformConfig?: string; // JSON
-  scheduledAt?: number | null;
-  startedAt?: number | null;
-  completedAt?: number | null;
+  scheduledAt?: null | number;
+  startedAt?: null | number;
+  completedAt?: null | number;
+  totalRecords?: number;
   processedRecords?: number;
   successRecords?: number;
   failedRecords?: number;
   outputFilePath?: string;
   outputFileSize?: number;
-  errorMessage?: string | null;
+  errorMessage?: null | string;
   errorDetails?: string; // JSON
   maxRetry?: number;
   retryCount?: number;
-  nextRetryAt?: number | null;
+  nextRetryAt?: null | number;
   workerId?: string;
   progressPercent?: number;
   progressMessage?: string;
@@ -227,7 +257,7 @@ export interface OutputTaskListReq extends PageQuery {
   taskStatus?: TaskStatus;
 }
 
-export interface OutputTaskListResp extends PageResult<OutputTaskInfo> {}
+export type OutputTaskListResp = PageResult<OutputTaskInfo>;
 
 export interface CreateOutputTaskReq extends Partial<OutputTaskInfo> {
   name: string;
@@ -242,7 +272,7 @@ export interface UpdateOutputTaskReq extends Partial<CreateOutputTaskReq> {
 export interface TaskLogInfo {
   id?: number;
   taskId?: number;
-  taskType?: 'input' | 'output';
+  taskType?: "input" | "output";
   level?: string;
   message?: string;
   details?: string; // JSON
@@ -251,11 +281,11 @@ export interface TaskLogInfo {
 
 export interface TaskLogListReq extends PageQuery {
   taskId?: number;
-  taskType?: 'input' | 'output';
+  taskType?: "input" | "output";
   level?: string;
 }
 
-export interface TaskLogListResp extends PageResult<TaskLogInfo> {}
+export type TaskLogListResp = PageResult<TaskLogInfo>;
 
 export interface MappingLogInfo {
   id?: number;
@@ -271,12 +301,18 @@ export interface MappingLogListReq extends PageQuery {
   level?: string;
 }
 
-export interface MappingLogListResp extends PageResult<MappingLogInfo> {}
+export type MappingLogListResp = PageResult<MappingLogInfo>;
 
 // ========== Config Center ==========
-export type ValueType = 'string' | 'number' | 'boolean' | 'json' | 'array' | 'object';
-export type ConfigScope = 'global' | 'service' | 'instance';
-export type ChangeType = 'create' | 'update' | 'delete' | 'rollback';
+export type ValueType =
+  | "array"
+  | "boolean"
+  | "json"
+  | "number"
+  | "object"
+  | "string";
+export type ConfigScope = "global" | "instance" | "service";
+export type ChangeType = "create" | "delete" | "rollback" | "update";
 
 export interface ConfigItem {
   id?: number;
@@ -327,7 +363,7 @@ export interface ListConfigReq extends PageQuery {
   keyword?: string;
 }
 
-export interface ListConfigResp extends PageResult<ConfigItem> {}
+export type ListConfigResp = PageResult<ConfigItem>;
 
 export interface GetConfigReq {
   configKey: string;
@@ -366,7 +402,7 @@ export interface ListAuditLogReq extends PageQuery {
   endTime?: number;
 }
 
-export interface ListAuditLogResp extends PageResult<ConfigAuditLog> {}
+export type ListAuditLogResp = PageResult<ConfigAuditLog>;
 
 export interface GetConfigHistoryReq {
   configKey: string;

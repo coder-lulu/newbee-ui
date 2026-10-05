@@ -1,11 +1,11 @@
-import { requestClient } from '#/api/request';
+import { requestClient } from "#/api/request";
 
 // Placeholder endpoints; wire up when backend exposes REST for metrics/performance
 enum Api {
-  Status = '/io-api/status',
-  Health = '/io-api/health',
-  Metrics = '/io-api/metrics',
-  Performance = '/io-api/performance',
+  Health = "/io-api/health",
+  Metrics = "/io-api/metrics",
+  Performance = "/io-api/performance",
+  Status = "/io-api/status",
 }
 
 export function getIoStatus() {
@@ -24,3 +24,21 @@ export function getIoPerformance() {
   return requestClient.get(Api.Performance);
 }
 
+export interface WorkerMetricsInfo {
+  id: number;
+  workerId: string;
+  cpuUsagePercent: number;
+  memoryUsagePercent: number;
+  currentTaskCount: number;
+  metricTime: number;
+}
+export function getWorkerMetricsList(params: {
+  page: number;
+  pageSize: number;
+  workerId?: string;
+}) {
+  return requestClient.post<{ data: WorkerMetricsInfo[]; total: number }>(
+    "/io-api/worker_metrics/list",
+    params,
+  );
+}

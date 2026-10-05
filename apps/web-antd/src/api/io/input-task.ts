@@ -7,23 +7,25 @@ import type {
   InputTaskListReq,
   InputTaskListResp,
   UpdateInputTaskReq,
-} from './model';
+} from "./model";
 
-import { requestClient } from '#/api/request';
+import { requestClient } from "#/api/request";
 
 enum Api {
-  Create = '/io-api/input_task/create',
-  Update = '/io-api/input_task/update',
-  Delete = '/io-api/input_task/delete',
-  GetById = '/io-api/input_task',
-  List = '/io-api/input_task/list',
-  Start = '/io-api/input_task/start',
-  Pause = '/io-api/input_task/pause',
-  Cancel = '/io-api/input_task/cancel',
+  Cancel = "/io-api/input_task/cancel",
+  Create = "/io-api/input_task/create",
+  Delete = "/io-api/input_task/delete",
+  GetById = "/io-api/input_task",
+  List = "/io-api/input_task/list",
+  Pause = "/io-api/input_task/pause",
+  Start = "/io-api/input_task/start",
+  Update = "/io-api/input_task/update",
 }
 
 export function getInputTaskList(params: InputTaskListReq) {
-  return requestClient.post<InputTaskListResp>(Api.List, params);
+  return requestClient.post<InputTaskListResp>(Api.List, params, {
+    params: { page: params.page, pageSize: params.pageSize },
+  });
 }
 
 export function getInputTaskById(id: ID) {
@@ -53,4 +55,3 @@ export function pauseInputTask(id: ID) {
 export function cancelInputTask(id: ID) {
   return requestClient.postWithMsg<BaseMsgResp>(Api.Cancel, { id });
 }
-

@@ -1,4 +1,4 @@
-import { requestClient } from '#/api/request';
+import { requestClient } from "#/api/request";
 
 export namespace AgentAPI {
   // Agent基础信息
@@ -8,7 +8,7 @@ export namespace AgentAPI {
     agent_id: string;
     host: string;
     port: number;
-    agent_status: 'online' | 'offline' | 'error';
+    agent_status: "error" | "offline" | "online";
     last_heartbeat: number;
     region?: string;
     tags?: string;
@@ -41,7 +41,10 @@ export namespace AgentAPI {
    * 获取Agent列表
    */
   export function listAgents(params: AgentListReq = {}) {
-    return requestClient.get<AgentListResp>('/ops-api/agent/list', { params });
+    const { page_size, agent_status, ...filters } = params;
+    return requestClient.get<AgentListResp>("/ops-api/agent/list", {
+      params: { ...filters, pageSize: page_size, agentStatus: agent_status },
+    });
   }
 
   /**
@@ -55,20 +58,20 @@ export namespace AgentAPI {
    * 创建Agent
    */
   export function createAgent(data: Partial<AgentItem>) {
-    return requestClient.post('/ops-api/agent/create', data);
+    return requestClient.post("/ops-api/agent/create", data);
   }
 
   /**
    * 更新Agent
    */
   export function updateAgent(data: Partial<AgentItem>) {
-    return requestClient.post('/ops-api/agent/update', data);
+    return requestClient.post("/ops-api/agent/update", data);
   }
 
   /**
    * 删除Agent
    */
   export function deleteAgent(ids: number[]) {
-    return requestClient.post('/ops-api/agent/delete', { ids });
+    return requestClient.post("/ops-api/agent/delete", { ids });
   }
 }

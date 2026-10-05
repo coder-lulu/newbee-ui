@@ -7,24 +7,26 @@ import type {
   ID,
   IDS,
   UpdateDiscoveryPoolReq,
-} from './model';
+} from "./model";
 
-import { requestClient } from '#/api/request';
+import { requestClient } from "#/api/request";
 
 enum Api {
-  Create = '/io-api/discovery_pool/create',
-  Update = '/io-api/discovery_pool/update',
-  Delete = '/io-api/discovery_pool/delete',
-  GetById = '/io-api/discovery_pool',
-  List = '/io-api/discovery_pool/list',
-  Enable = '/io-api/discovery_pool/enable',
-  Disable = '/io-api/discovery_pool/disable',
-  Trigger = '/io-api/discovery_pool/trigger',
-  Stats = '/io-api/discovery_pool/stats',
+  Create = "/io-api/discovery_pool/create",
+  Delete = "/io-api/discovery_pool/delete",
+  Disable = "/io-api/discovery_pool/disable",
+  Enable = "/io-api/discovery_pool/enable",
+  GetById = "/io-api/discovery_pool",
+  List = "/io-api/discovery_pool/list",
+  Stats = "/io-api/discovery_pool/stats",
+  Trigger = "/io-api/discovery_pool/trigger",
+  Update = "/io-api/discovery_pool/update",
 }
 
 export function getDiscoveryPoolList(params: DiscoveryPoolListReq) {
-  return requestClient.post<DiscoveryPoolListResp>(Api.List, params);
+  return requestClient.post<DiscoveryPoolListResp>(Api.List, params, {
+    params: { page: params.page, pageSize: params.pageSize },
+  });
 }
 
 export function getDiscoveryPoolById(id: ID) {
@@ -58,4 +60,3 @@ export function triggerDiscoveryPool(id: ID) {
 export function getDiscoveryPoolStats(id: ID) {
   return requestClient.get<any>(`${Api.Stats}/${id}`);
 }
-

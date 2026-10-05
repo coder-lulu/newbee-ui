@@ -1,20 +1,20 @@
 import type {
+  ID,
   MappingLogInfo,
   MappingLogListReq,
   MappingLogListResp,
   TaskLogInfo,
   TaskLogListReq,
   TaskLogListResp,
-  ID,
-} from './model';
+} from "./model";
 
-import { requestClient } from '#/api/request';
+import { requestClient } from "#/api/request";
 
 enum Api {
-  TaskLogList = '/io-api/log/task/list',
-  TaskLogById = '/io-api/log/task',
-  MappingLogList = '/io-api/log/mapping/list',
-  MappingLogById = '/io-api/log/mapping',
+  MappingLogById = "/io-api/mapping_log",
+  MappingLogList = "/io-api/mapping_log/list",
+  TaskLogById = "/io-api/task_log",
+  TaskLogList = "/io-api/task_log/list",
 }
 
 export function getTaskLogList(params: TaskLogListReq) {
@@ -32,4 +32,3 @@ export function getMappingLogList(params: MappingLogListReq) {
 export function getMappingLogById(id: ID) {
   return requestClient.get<MappingLogInfo>(`${Api.MappingLogById}/${id}`);
 }
-
