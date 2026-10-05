@@ -5,7 +5,10 @@ import type {
 
 import { describe, expect, it } from "vitest";
 
-import { replaceMissingComponents } from "./route-components";
+import {
+  replaceMissingComponents,
+  resolveBackendMenuPath,
+} from "./route-components";
 
 const pageMap: ComponentRecordType = {
   "../views/dashboard/workspace/index.vue": async () => ({}),
@@ -75,5 +78,22 @@ describe("backend route components", () => {
     expect(routes[0]?.meta?.hideInMenu).toBe(true);
     expect(routes[1]?.component).toBe("/_core/fallback/not-found");
     expect(routes[1]?.meta?.authority).toEqual(["admin"]);
+  });
+});
+
+describe("backend menu paths", () => {
+  it.each([
+    ["/system", "user", "/system/user"],
+    ["/cmdb", "cis", "/cmdb/cis"],
+    ["/cmdb", "/cmdb/cis", "/cmdb/cis"],
+    ["/io", "/io/input-task", "/io/input-task"],
+    ["/io", "/io/config", "/io/config"],
+    ["/io/config", "credentials", "/io/config/credentials"],
+    ["/", "/workspace", "/workspace"],
+    ["/", "workspace", "/workspace"],
+    ["/system", "", ""],
+    ["", "/system", "/system"],
+  ])("resolves %s + %s to %s", (parent, path, expected) => {
+    expect(resolveBackendMenuPath(parent, path)).toBe(expected);
   });
 });

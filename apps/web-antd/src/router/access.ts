@@ -22,6 +22,7 @@ import { useAuthStore } from "#/store";
 import {
   normalizeComponentPath,
   replaceMissingComponents,
+  resolveBackendMenuPath,
 } from "./route-components";
 import { localMenuList } from "./routes/local";
 
@@ -71,7 +72,7 @@ function backMenuToVbenMenu(
       // 取子菜单的meta作为当前菜单的meta
       menu.meta = menu.children[0].meta;
       // 由于在一级路由 父级路径需要加上/
-      menu.path = `/${path}`;
+      menu.path = resolveBackendMenuPath("/", path);
       menu.component = "RootMenu";
       // 将子路径设置为''
       menu.children[0].path = "";
@@ -103,7 +104,7 @@ function backMenuToVbenMenu(
      * menu.path为''(根目录路由) 则不拼接
      */
     if (parentPath && menu.path) {
-      menu.path = `${parentPath}/${menu.path}`;
+      menu.path = resolveBackendMenuPath(parentPath, menu.path);
     }
 
     // 创建vben路由对象

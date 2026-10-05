@@ -35,3 +35,8 @@ export function replaceMissingComponents(
     }
   }
 }
+
+export function resolveBackendMenuPath(parentPath: string, path: string) {
+  if (!parentPath || !path || path.startsWith("/")) return path;
+  return `${parentPath.replace(/\/+$/, "")}/${path}`;
+}

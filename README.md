@@ -78,15 +78,15 @@ pnpm dev:antd
 
 使用上述配置时访问 `http://localhost:5666`，实际端口以启动输出为准。开发代理配置在 [`apps/web-antd/vite.config.mts`](apps/web-antd/vite.config.mts)：
 
-| 浏览器请求前缀 | 代理目标 | 用途 |
-| --- | --- | --- |
-| `/sys-api` | `http://127.0.0.1:9101` | 核心 API、登录与系统管理 |
-| `/cmdb-api` | `http://127.0.0.1:9207` | CMDB API |
-| `/io-api` | `http://127.0.0.1:9501` | 统一 I/O API |
-| `/ops-api`、`/ops-center-api` | `http://127.0.0.1:9601` | 运维中心 API |
-| `/fms-api` | `http://127.0.0.1:9102` | 文件服务 |
-| `/ipam-api` | `http://127.0.0.1:9302` | IP 地址管理 |
-| `/mms-api` | `http://127.0.0.1:9104` | 消息服务 |
+| 浏览器请求前缀                | 代理目标                | 用途                     |
+| ----------------------------- | ----------------------- | ------------------------ |
+| `/sys-api`                    | `http://127.0.0.1:9101` | 核心 API、登录与系统管理 |
+| `/cmdb-api`                   | `http://127.0.0.1:9207` | CMDB API                 |
+| `/io-api`                     | `http://127.0.0.1:9501` | 统一 I/O API             |
+| `/ops-api`、`/ops-center-api` | `http://127.0.0.1:9601` | 运维中心 API             |
+| `/fms-api`                    | `http://127.0.0.1:9102` | 文件服务                 |
+| `/ipam-api`                   | `http://127.0.0.1:9302` | IP 地址管理              |
+| `/mms-api`                    | `http://127.0.0.1:9104` | 消息服务                 |
 
 每条代理均移除表中前缀并支持 WebSocket。例如浏览器的 `/sys-api/user/login` 被转发为核心服务的 `/user/login`。后端位于其他机器时修改对应 `target`；生产部署需在 Web 服务器配置同样的路由。`VITE_GLOB_API_URL=/` 表示同源请求，不应再额外添加 `/api` 前缀。账号由实际后端初始化流程提供。
 
@@ -105,6 +105,8 @@ cat apps/.env apps/.env.production > apps/web-antd/.env.production.local
 ```bash
 pnpm build:antd
 ```
+
+请在仓库根目录执行以上命令。它先通过 Turbo 构建 workspace 依赖，再构建应用；安装时生成的 `unbuild --stub` 文件包含 Node.js 专用的 `jiti`，首次构建若直接执行 `pnpm --filter @vben/web-antd build` 会跳过依赖构建，可能报 `createRequire` 浏览器兼容错误。
 
 产物目录为 **`apps/web-antd/dist/`**。部署时复制该目录的完整内容，包括 `index.html`、静态资源和 `_app.config.js`。可用下列命令本地预览静态构建，但预览不能代替生产接口网关：
 
@@ -175,9 +177,26 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-打开站点后，在浏览器网络面板检查 `/sys-api/` 请求是否正常到达核心服务，再验证已部署业务模块。当前 [`scripts/deploy/Dockerfile`](scripts/deploy/Dockerfile) 仍复制 `playground/dist`，不对应本应用产物；因此这里采用上述静态资源部署步骤。
+打开站点后，在浏览器网络面板检查 `/sys-api/` 请求是否正常到达核心服务，再验证已部署业务模块。也可以使用下一节的容器部署。
 
-### 3. 构建配置与运行时配置
+### 3. Docker 部署
+
+[`scripts/deploy/Dockerfile`](scripts/deploy/Dockerfile) 使用 `pnpm build:antd` 构建 `apps/web-antd/dist`，由 Nginx 提供静态页面和同源 API 代理。在仓库根目录运行：
+
+```bash
+docker build -f scripts/deploy/Dockerfile -t newbee-ui:local .
+docker run -d --name newbee-ui -p 8080:8080 \
+  --add-host=host.docker.internal:host-gateway \
+  newbee-ui:local
+```
+
+镜像构建使用已提交的 `apps/.env` 和 `apps/.env.production` 模板；按目标环境修改模板后再构建。本机 `.env.*.local`、依赖、日志和旧产物不会进入构建上下文。前端所有 `VITE_GLOB_*` 配置会公开给浏览器，不应包含服务端凭据。
+
+容器默认访问宿主机的 Core `9101`、CMDB `9207`、IO `9501`、Ops `9601` 端口。后端必须监听容器可访问的地址；部署到同一 Docker 网络时，可通过 `docker run -e` 分别覆盖 `CORE_API_UPSTREAM`、`CMDB_API_UPSTREAM`、`IO_API_UPSTREAM`、`OPS_API_UPSTREAM`，值格式为 `服务名:端口`（不含 `http://`）。容器启动时将这些值填入 Nginx 配置。平台之外的 FMS、IPAM、MMS 路由默认返回 503，接入这些服务时需自定义 Nginx 配置。
+
+浏览器访问 `http://localhost:8080`。`pnpm build:docker` 是相同镜像构建的 Bash 入口，日志位于 `logs/clone-deploy/docker-build.log`，不会停止或删除正在运行的容器。
+
+### 4. 构建配置与运行时配置
 
 - `VITE_APP_TITLE`、`VITE_BASE`、`VITE_ROUTER_HISTORY` 等参与构建，修改后重新构建并部署。
 - 构建插件将 `VITE_GLOB_*` 导出到 `dist/_app.config.js`，生产环境通过 `window._VBEN_ADMIN_PRO_APP_CONF_` 读取。其中 API 基址等可在部署产物中调整；保留文件原有赋值结构和字段类型，并使浏览器重新加载配置。

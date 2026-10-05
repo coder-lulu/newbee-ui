@@ -73,7 +73,7 @@
       <div class="bg-white p-4 rounded-lg shadow-sm">
         <div class="flex items-center">
           <div class="bg-yellow-100 p-3 rounded-full mr-3">
-            <ExclamationTriangleOutlined class="text-yellow-600 text-lg" />
+            <WarningOutlined class="text-yellow-600 text-lg" />
           </div>
           <div>
             <div class="text-2xl font-bold text-gray-900">{{ statistics.violatedConstraints }}</div>
@@ -563,7 +563,7 @@ import {
   EyeOutlined,
   LinkOutlined,
   CheckCircleOutlined,
-  ExclamationTriangleOutlined,
+  WarningOutlined,
   SettingOutlined,
   DownOutlined,
   ArrowRightOutlined,
